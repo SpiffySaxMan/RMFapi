@@ -10,27 +10,29 @@ var home = process.env[(process.platform === 'win32' ? 'USERPROFILE' : 'HOME')];
 var apiKeyFilePath = home + '/.stormpath/apiKey.properties';
 
 module.exports = {
-  createClient: function (apiKeyFilePath) {
-    this.createClient ={
-      if (apiKeyFilePath != 'undefined') {
-        stormpath.loadApiKey(apiKeyFilePath, function apiKeyFileLoaded(err, apiKey) {
+  createClient: function () {
+      var home = process.env[(process.platform === 'win32' ? 'USERPROFILE' : 'HOME')];
+      var apiKeyFilePath = home + '/.stormpath/apiKey.properties';
+
+      if (apiKeyFilePath == 'undefined') {
+	var apiKey = new stormpath.ApiKey(
+          process.env['STORMPATH_CLIENT_APIKEY_ID'],
+          process.env['STORMPATH_CLIENT_APIKEY_SECRET']
+        );
+        console.log({ apiKey: apiKey });
+        client = new stormpath.Client({ apiKey: apiKey });
+        console.log('apiKey created... Client Created');
+      }
+
+      else {
+	stormpath.loadApiKey(apiKeyFilePath, function apiKeyFileLoaded(err, apiKey) {
+          console.log({ apiKey: apiKey });
           client = new stormpath.Client({ apiKey: apiKey });
           console.log('apiKey found... Client Created');
         });
       }
-
-      else {
-        var apiKey = new stormpath.ApiKey(
-          process.env['STORMPATH_CLIENT_APIKEY_ID'],
-          process.env['STORMPATH_CLIENT_APIKEY_SECRET']
-        );
-        var client = new stormpath.Client({ apiKey: apiKey });
-        console.log('apiKey created... Client Created');
-      }
-    }
   },
   createUser: function () {
-    this.createUser={
       this.createClient;
 
       client.getDirectory(usersHref, callback);
@@ -42,6 +44,5 @@ module.exports = {
       RMFapp.createAccount(account, function(err, createdAccount) {
       console.log(createdAccount);
       });
-    }
   }
 };
