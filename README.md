@@ -1,2 +1,6 @@
 # RMFapi
-Roomate Finder Api
+This is the API for the Roomate Finder App.
+The requirements only requirement is node.js
+
+The Roomate Finder App can be located at:
+https://github.com/SpiffySaxMan/RMFapp
