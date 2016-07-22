@@ -11,14 +11,15 @@ var apiKeyFilePath = home + '/.stormpath/apiKey.properties';
 
 module.exports = {
   createClient: function () {
-      var home = process.env[(process.platform === 'win32' ? 'USERPROFILE' : 'HOME')];
-      var apiKeyFilePath = home + '/.stormpath/apiKey.properties';
+      var apiKeyFilePath = './.devsessions/apiKey.properties';
+      console.log('apiKeyFilePath: ' + apiKeyFilePath);
 
       if (apiKeyFilePath == 'undefined') {
 	var apiKey = new stormpath.ApiKey(
           process.env['STORMPATH_CLIENT_APIKEY_ID'],
           process.env['STORMPATH_CLIENT_APIKEY_SECRET']
         );
+        console.log('Created apiKey: ');
         console.log({ apiKey: apiKey });
         client = new stormpath.Client({ apiKey: apiKey });
         console.log('apiKey created... Client Created');
@@ -26,14 +27,15 @@ module.exports = {
 
       else {
 	stormpath.loadApiKey(apiKeyFilePath, function apiKeyFileLoaded(err, apiKey) {
+          console.log('Found apiKey: ');
           console.log({ apiKey: apiKey });
           client = new stormpath.Client({ apiKey: apiKey });
-          console.log('apiKey found... Client Created');
+          console.log('Client Created');
         });
       }
   },
   createUser: function () {
-      this.createClient;
+      this.createClient();
 
       client.getDirectory(usersHref, callback);
       var account = {
