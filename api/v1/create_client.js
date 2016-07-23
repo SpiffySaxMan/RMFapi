@@ -6,4 +6,4 @@ var usersHref = 'https://api.stormpath.com/v1/directories/13tj6f50q7jJ7WvDu6SxHa
 var client;
 var app;
 
-console.log(tools.createClient());
+tools.createClient();
