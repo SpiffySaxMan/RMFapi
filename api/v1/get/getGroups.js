@@ -3,7 +3,7 @@ var util = require ('util');
 var appHref = 'https://api.stormpath.com/v1/applications/51svJbDiIWsbDOPen5PRqW';
 var userHref = 'https://api.stormpath.com/v1/groups/5LdmRbTxYhyEU57CjWbmXx';
 var adminHref = 'https://api.stormpath.com/v1/groups/5UcjjqsXASmrChtV5bNMXZ';
-var apiKeyFilePath = './.devsessions/apiKey.properties';
+var apiKeyFilePath = '../dev/apiKey.properties';
 var RMFapp;
 var RMFuser;
 var RMFadmin;
@@ -17,10 +17,9 @@ stormpath.loadApiKey(apiKeyFilePath, function apiKeyFileLoaded(err, apiKey) {
   var client = new stormpath.Client(apiKey);
   console.log('Client Created');
 
-  //Get Application
+  // Get Application
   client.getApplication(appHref, function(err, RMFapp) {
-    console.log(RMFapp);
-
+    // Get Groups
     RMFapp.getGroups(function(err, groups) {
       groups.each(function(group, cb) {
         console.log('group:', group);
