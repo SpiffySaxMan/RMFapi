@@ -1,12 +1,3 @@
-var stormpath = require('stormpath')
-var util = require ('util');
-var appHref = 'https://api.stormpath.com/v1/applications/51svJbDiIWsbDOPen5PRqW';
-var userHref = 'https://api.stormpath.com/v1/groups/5LdmRbTxYhyEU57CjWbmXx';
-var apiKeyFilePath = '../.devsessions/apiKey.properties';
-var RMFapp;
-var callback;
-console.log('apiKeyFilePath: ' + apiKeyFilePath);
-
 // Example account Info
 var account = {
   givenName: 'Exp',
@@ -16,24 +7,56 @@ var account = {
   password: 'Changeme1!'
 };
 
-// Load apiKey
-stormpath.loadApiKey(apiKeyFilePath, function apiKeyFileLoaded(err, apiKey) {
-  console.log({ apiKey: apiKey });
-  var apiKey = { apiKey: apiKey };
-  var client = new stormpath.Client(apiKey);
-  console.log('Client Created.');
+function createAccount() {
+  var givenName = this.$form.('#givenName').val();
+  var surname = this.$form.('#surname').val();
+  var username = this.$form.('#username').val();
+  var email = this.$form.('#email').val();
+  var password = this.$form.('#password').val();
+  var verifypassword = this.$form.('#verifypassword').val();
+  var posttypes = {
+    HR: this.$form.('#HR').val();
+    RH: this.$form.('#RH').val();
+    RR: this.$form.('#RR').val();
+  }
 
-  //Get Application
-  client.getApplication(appHref, function(err, RMFapp) {
-    if (err = "null") {
-      // Create Account
-      console.log({ account: account });
-      RMFapp.createAccount(account, function(err, createdAccount) {
+  if (password = verifypassword){
+    var account = {
+      // Account Information
+      givenName: givenName,
+      surname: surname,
+      username: username,
+      email: email,
+      password: password,
+      posttypes: posttypes,
+    };
+    console.log({ account: account });
+
+    // Load apiKey
+    stormpath.loadApiKey(apiKeyFilePath, function apiKeyFileLoaded(err, apiKey) {
+      console.log({ apiKey: apiKey });
+      var apiKey = { apiKey: apiKey };
+      var client = new stormpath.Client(apiKey);
+      console.log('Client Created.');
+      //Get Application
+      client.getApplication(appHref, function(err, RMFapp) {
         if (err = "null") {
-          console.log('Account Created.');
+          // Create Account
+          RMFapp.createAccount(account, function(err, createdAccount) {
+            if (err = "null") {
+               console.log('Account Created.');
+            }
+            else throw err;
+          });
         }
-        else throw err;
       });
-    }
-  });
-});
+    });
+  }
+  else {
+    alert ('Passwords Differ');
+  }
+}
+
+module.exports = {
+  createAccount: createAccount
+}
